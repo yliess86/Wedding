@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Wedding</title>
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="container" class="container">
+            <div class="card">
+                <div id="envelope" class="envelope waiting" onclick="openEnvelope()">
+                    <div class="envelope-lid"></div>
+                    <img class="stamp" src="stamp.png" />
+                </div>
+                <img class="tl" src="flowerstl.png" />
+                <img class="br" src="flowersbr.png" />
+                <img class="tr" src="lacestr.png" />
+                <img class="bl" src="lacesbl.png" />
+                <div class="header">
+                    <img class="calli" src="calli.svg" />
+                    <h1 class="script title">
+                        <div class="big">Yliess</div>
+                        <div class="medium">&</div>
+                        <div class="big">Badr</div>
+                    </h1>
+                </div>
+                <div class="core tinos">
+                    <p>Sont heureux de<br/>vous convier à célébrer<br/>leur union</p>
+                    <p class="bold">Samedi<span class="sep">|</span><span class="vespe normal">13</span><span class="sep">|</span>Août</p>
+                    <p>A partir de de 18h30<br/>Maison des arches, 86580<br/>Vouneuil-Sous-Biard</p>
+                </div>
+            </div>
+
+            <div id="form" class="form">
+                <div>
+                    <p class="script medium">Votre Réponse</p>
+                    <p class="tinos question">Aurons-nous le plaisir<br />de vous compter parmi nous ?</p>
+                </div>
+                <p class="tinos bold">Veuillez nous informer des adultes présents</p>
+                <div class="input">
+                    <input class="tinos" id="name" type="text" placeholder="prénom" />
+                    <input class="tinos" id="surname" type="text" placeholder="nom" />
+                    <input class="tinos" id="regime" type="text" placeholder="régime particulier" />
+                    <button class="action action-small tinos bold" onclick="addGuest()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="guests" class="guests"></div>
+                <button id="send" class="action tinos bold" onclick="sendGuests()">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                    </svg>
+                    <span>Envoyer</span>
+                </button>
+                <p class="tinos bold">Merci de nous répondre avant le<br/><span class="normal">13.06.2022</span></p>
+            </div>
+        </div>
+
+        <script lang="javascript">
+            let envelope = document.getElementById("envelope")
+            let form = document.getElementById("form")
+
+            let openEnvelope = () => {
+                envelope.classList.remove("waiting")
+                envelope.classList.add("open")
+                envelope.onclick = null
+                requestAnimationFrame(() => form.style.setProperty("opacity", "1.0"))
+                setTimeout(() => form.style.setProperty("display", "flex"), 2000)
+            }
+
+            let guest_name = document.getElementById("name")
+            let guest_surname = document.getElementById("surname")
+            let guest_regime = document.getElementById("regime")
+            let guests_element = document.getElementById("guests")
+            let guests = [];
+
+            let inGuest = guest => {
+                for (let i = 0; i < guests.length; ++i)
+                    if (guests[i].name == guest.name && guests[i].surname == guest.surname)
+                        return true
+                return false
+            }
+            
+            let addGuest = () => {
+                let guest = {
+                    name: guest_name.value.toLowerCase(),
+                    surname: guest_surname.value.toLowerCase(),
+                    regime: guest_regime.value.toLowerCase(),
+                }
+                if (!inGuest(guest)){
+                    guests.push(guest)
+                    updateGuests()
+                }
+                guest_name.value = ""
+                guest_surname.value = ""
+                guest_regime.value = ""
+            }
+
+            let removeGuest = guest_index => {
+                guests = guests.filter((guest, index) => index != guest_index)
+                updateGuests()
+            }
+
+            let updateGuests = () => {
+                innerHTML = "\n"
+                guests.forEach((guest, index) => {
+                    innerHTML += `<div class="tinos guest"><div class="text">${guest.name}</div><div class="text">${guest.surname}</div><div class="text">${guest.regime}</div><button class="action action-small tinos bold" onclick="removeGuest(${index})"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg></button></div>\n`
+                })
+                guests_element.innerHTML = innerHTML
+            }
+
+            let send = document.getElementById("send")
+
+            let sendGuests = () => {
+                if (guests.length <= 0) return;
+                form.classList.add("hide")
+                send.onclick = null
+                send.style.setProperty("cursor", "default")
+                requestAnimationFrame(() => form.style.setProperty("opacity", "0.0"))
+                setTimeout(() => form.style.setProperty("display", "none"), 2000)
+            }
+        </script>
+    </body>
+</html>
