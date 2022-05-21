@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Wedding</title>
         <link href="style.css" rel="stylesheet">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     </head>
     <body>
         <div id="container" class="container">
@@ -125,12 +126,15 @@
                 requestAnimationFrame(() => form.style.setProperty("opacity", "0.0"))
                 setTimeout(() => form.style.setProperty("display", "none"), 2000)
 
-                let subject = "YB MARIAGE"
-                let body = "Bonjour,\n\nNous vous envoyons ce mail pour vous informer de notre présence au mariage.  Vous trouvez ci-dessous la liste des adultes qui seront présents:\n\n"
-                guests.forEach(guest => body += `- ${guest.name} | ${guest.surname} | ${guest.regime}\n`)
-                body += `\n\nCordialement,\n${guests[guests.length - 1].name} ${guests[guests.length - 1].surname}`
-                body = encodeURIComponent(body)
-                window.open(`mailto:hatiyliess86@gmail.com?subject=${subject}&body=${body}`);
+                let guests_html = "<ul>"
+                guests.forEach(guest => guests_html += `<li>${guest.name} | ${guest.surname} | ${guest.regime}</li>`)
+                guests_html += "</ul>"
+
+                emailjs.send("service_14kbkpi", "template_ihfdgor", {
+                    name: guests[guests.length - 1].name,
+                    surname: guests[guests.length - 1].surname,
+                    guests: guests_html,
+                }, "1fe28j5U3n0KCkXvH")
             }
         </script>
     </body>
