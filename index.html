@@ -124,6 +124,13 @@
                 send.style.setProperty("cursor", "default")
                 requestAnimationFrame(() => form.style.setProperty("opacity", "0.0"))
                 setTimeout(() => form.style.setProperty("display", "none"), 2000)
+
+                let subject = "YB MARIAGE"
+                let body = "Bonjour,\n\nNous vous envoyons ce mail pour vous informer de notre présence au mariage.  Vous trouvez ci-dessous la liste des adultes qui seront présents:\n\n"
+                guests.forEach(guest => body += `- ${guest.name} | ${guest.surname} | ${guest.regime}\n`)
+                body += `\n\nCordialement,\n${guests[guests.length - 1].name} ${guests[guests.length - 1].surname}`
+                body = encodeURIComponent(body)
+                window.open(`mailto:hatiyliess86@gmail.com?subject=${subject}&body=${body}`);
             }
         </script>
     </body>
